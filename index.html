@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전통 장기 (Janggi) - 지적 동반자와의 대국</title>
+    <title>전통 장기 (Janggi)</title>
     <style>
         :root {
             --bg-color: #f4f4f5;
             --panel-bg: #ffffff;
             --text-color: #27272a;
             --board-bg: #e6c280;
-            --line-color: #785a28;
-            --accent-color: #3f3f46;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
@@ -39,18 +37,8 @@
             align-items: center;
         }
 
-        h1 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .subtitle {
-            font-size: 0.85rem;
-            color: #71717a;
-            margin-bottom: 15px;
-            text-align: center;
-        }
+        h1 { font-size: 1.4rem; margin-bottom: 5px; font-weight: 600; }
+        .subtitle { font-size: 0.85rem; color: #71717a; margin-bottom: 15px; text-align: center; }
 
         .controls {
             display: flex;
@@ -68,28 +56,12 @@
             border-radius: 6px;
             background-color: #fff;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
-        button {
-            background-color: #27272a;
-            color: #fff;
-            border: none;
-            font-weight: 500;
-        }
+        button { background-color: #27272a; color: #fff; border: none; font-weight: 500; }
+        button:hover { background-color: #3f3f46; }
 
-        button:hover {
-            background-color: #3f3f46;
-        }
-
-        .status {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 12px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-        }
+        .status { font-size: 1rem; font-weight: 500; margin-bottom: 12px; height: 24px; display: flex; align-items: center; }
 
         .board-wrapper {
             background-color: var(--board-bg);
@@ -99,16 +71,8 @@
             cursor: pointer;
         }
 
-        canvas {
-            display: block;
-        }
-
-        .footer-note {
-            margin-top: 15px;
-            font-size: 0.8rem;
-            color: #a1a1aa;
-            text-align: center;
-        }
+        canvas { display: block; }
+        .footer-note { margin-top: 15px; font-size: 0.8rem; color: #a1a1aa; text-align: center; }
     </style>
 </head>
 <body>
@@ -129,7 +93,7 @@
         <div>
             <label for="formation">상마진형: </label>
             <select id="formation">
-                <option value="ma-sang">마상마상 (기본)</option>
+                <option value="ma-sang">마상마상</option>
                 <option value="sang-ma">상마상마</option>
             </select>
         </div>
@@ -179,30 +143,26 @@
         }
 
         // 한(2) 배치 (상단)
-        board[0] = p2Order.map(type => type ? { type, owner: 2 } : null);
+        for (let c = 0; c < 9; c++) {
+            if (p2Order[c]) board[0][c] = { type: p2Order[c], owner: 2 };
+        }
+        board[1][4] = { type: 'general', owner: 2 };
         board[2][1] = { type: 'cannon', owner: 2 };
         board[2][7] = { type: 'cannon', owner: 2 };
-        board[3] = [
-            { type: 'soldier', owner: 2 }, null,
-            { type: 'soldier', owner: 2 }, null,
-            { type: 'soldier', owner: 2 }, null,
-            { type: 'soldier', owner: 2 }, null,
-            { type: 'soldier', owner: 2 }
-        ];
-        board[1][4] = { type: 'general', owner: 2 };
+        for (let c = 0; c < 9; c += 2) {
+            board[3][c] = { type: 'soldier', owner: 2 };
+        }
 
         // 초(1) 배치 (하단)
-        board[9] = p1Order.map(type => type ? { type, owner: 1 } : null);
+        for (let c = 0; c < 9; c++) {
+            if (p1Order[c]) board[9][c] = { type: p1Order[c], owner: 1 };
+        }
+        board[8][4] = { type: 'general', owner: 1 };
         board[7][1] = { type: 'cannon', owner: 1 };
         board[7][7] = { type: 'cannon', owner: 1 };
-        board[6] = [
-            { type: 'soldier', owner: 1 }, null,
-            { type: 'soldier', owner: 1 }, null,
-            { type: 'soldier', owner: 1 }, null,
-            { type: 'soldier', owner: 1 }, null,
-            { type: 'soldier', owner: 1 }
-        ];
-        board[8][4] = { type: 'general', owner: 1 };
+        for (let c = 0; c < 9; c += 2) {
+            board[6][c] = { type: 'soldier', owner: 1 };
+        }
 
         turn = 1;
         selectedPiece = null;
@@ -238,21 +198,13 @@
         if (selectedPiece) {
             ctx.fillStyle = 'rgba(59, 130, 246, 0.3)';
             ctx.beginPath();
-            ctx.arc(
-                CELL_W * (selectedPiece.c + 0.5),
-                CELL_H * (selectedPiece.r + 0.5),
-                CELL_W * 0.42, 0, Math.PI * 2
-            );
+            ctx.arc(CELL_W * (selectedPiece.c + 0.5), CELL_H * (selectedPiece.r + 0.5), CELL_W * 0.42, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.fillStyle = 'rgba(16, 185, 129, 0.6)';
             for (let m of validMoves) {
                 ctx.beginPath();
-                ctx.arc(
-                    CELL_W * (m.c + 0.5),
-                    CELL_H * (m.r + 0.5),
-                    CELL_W * 0.2, 0, Math.PI * 2
-                );
+                ctx.arc(CELL_W * (m.c + 0.5), CELL_H * (m.r + 0.5), CELL_W * 0.2, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
@@ -260,9 +212,7 @@
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 let p = board[r][c];
-                if (p) {
-                    drawPiece(c, r, p);
-                }
+                if (p) drawPiece(c, r, p);
             }
         }
     }
@@ -303,7 +253,7 @@
         else if (p.type === 'guard') label = '士';
         else if (p.type === 'general') label = p.owner === 1 ? '초' : '한';
         else if (p.type === 'cannon') label = '包';
-        else if (p.type === 'soldier') label = p.owner === 1 ? '卒' : '兵';
+        else if (p.type === 'soldier') label = p.owner === 1 ? '卒' : '병';
 
         ctx.fillText(label, cx, cy);
     }
@@ -312,11 +262,8 @@
         if (gameOver || isAITurn || turn !== 1) return;
 
         const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        const c = Math.floor(mouseX / CELL_W);
-        const r = Math.floor(mouseY / CELL_H);
+        const c = Math.floor((e.clientX - rect.left) / CELL_W);
+        const r = Math.floor((e.clientY - rect.top) / CELL_H);
 
         if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return;
 
@@ -378,17 +325,13 @@
                 addIfValid(r + fwd, c, p.owner, moves);
                 addIfValid(r, c - 1, p.owner, moves);
                 addIfValid(r, c + 1, p.owner, moves);
-                if (isInPalace(r, c, p.owner)) {
-                    let palaceDirs = getPalaceDiagDirs(r, c, p.owner);
-                    for (let d of palaceDirs) addIfValid(d.r, d.c, p.owner, moves);
-                }
                 break;
 
             case 'guard':
             case 'general':
-                if (isInPalace(r, c, p.owner)) {
-                    let palaceDirs = getPalaceDirs(r, c, p.owner);
-                    for (let d of palaceDirs) addIfValid(d.r, d.c, p.owner, moves);
+                let palaceDirs = [{r:r-1, c}, {r:r+1, c}, {r, c-1}, {r, c+1}];
+                for (let d of palaceDirs) {
+                    if (isInPalace(d.r, d.c, p.owner)) addIfValid(d.r, d.c, p.owner, moves);
                 }
                 break;
 
@@ -442,10 +385,8 @@
                     { dr: 0, dc: 1, tr: -1, tc: 2 }, { dr: 0, dc: 1, tr: 1, tc: 2 }
                 ];
                 for (let md of mDirs) {
-                    let blockR = r + md.dr;
-                    let blockC = c + md.dc;
-                    let targetR = r + md.tr;
-                    let targetC = c + md.tc;
+                    let blockR = r + md.dr, blockC = c + md.dc;
+                    let targetR = r + md.tr, targetC = c + md.tc;
                     if (blockR >= 0 && blockR < ROWS && blockC >= 0 && blockC < COLS && !board[blockR][blockC]) {
                         addIfValid(targetR, targetC, p.owner, moves);
                     }
@@ -490,26 +431,6 @@
     function isInPalace(r, c, owner) {
         if (owner === 2) return r >= 0 && r <= 2 && c >= 3 && c <= 5;
         return r >= 7 && r <= 9 && c >= 3 && c <= 5;
-    }
-
-    function getPalaceDirs(r, c, owner) {
-        let dirs = [{r:r-1, c}, {r:r+1, c}, {r, c-1}, {r, c+1}];
-        if ((r === 0 && c === 3) || (r === 2 && c === 5) || (r === 7 && c === 3) || (r === 9 && c === 5)) dirs.push({r: r+1, c: c+1}, {r: r-1, c: c-1});
-        if ((r === 0 && c === 5) || (r === 2 && c === 3) || (r === 7 && c === 5) || (r === 9 && c === 3)) dirs.push({r: r+1, c: c-1}, {r: r-1, c: c+1});
-        if (r === 1 && c === 4) {
-            dirs.push({r:0, c:3}, {r:0, c:5}, {r:2, c:3}, {r:2, c:5}, {r:8, c:3}, {r:8, c:5}, {r:9, c:3}, {r:9, c:5});
-        }
-        return dirs.filter(d => isInPalace(d.r, d.c, owner));
-    }
-
-    function getPalaceDiagDirs(r, c, owner) {
-        let res = [];
-        if (isInPalace(r, c, owner)) {
-            if (r === 1 && c === 4) {
-                res.push({r: owner === 1 ? 6 : 2, c: 3}, {r: owner === 1 ? 6 : 2, c: 5});
-            }
-        }
-        return res;
     }
 
     function aiTurn() {
