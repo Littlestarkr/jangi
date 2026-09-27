@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전통 장기 (Janggi)</title>
+    <title>전통 장기 (Janggi) - 지적 동반자와의 대국</title>
     <style>
         :root {
             --bg-color: #f4f4f5;
             --panel-bg: #ffffff;
             --text-color: #27272a;
             --board-bg: #e6c280;
+            --line-color: #785a28;
         }
 
         body {
@@ -30,7 +31,7 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            max-width: 600px;
+            max-width: 520px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -61,17 +62,96 @@
         button { background-color: #27272a; color: #fff; border: none; font-weight: 500; }
         button:hover { background-color: #3f3f46; }
 
-        .status { font-size: 1rem; font-weight: 500; margin-bottom: 12px; height: 24px; display: flex; align-items: center; }
+        .status { font-size: 1rem; font-weight: 500; margin-bottom: 15px; height: 24px; display: flex; align-items: center; }
 
-        .board-wrapper {
+        .board {
+            display: grid;
+            grid-template-columns: repeat(9, 42px);
+            grid-template-rows: repeat(10, 42px);
             background-color: var(--board-bg);
-            padding: 15px;
-            border-radius: 8px;
+            border: 3px solid var(--line-color);
+            padding: 10px;
+            border-radius: 6px;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .cell {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             cursor: pointer;
         }
 
-        canvas { display: block; }
+        /* 장기판 선 구현 */
+        .cell::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--line-color);
+            z-index: 1;
+        }
+        .cell::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background-color: var(--line-color);
+            z-index: 1;
+        }
+
+        .piece {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 15px;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        .piece.cho {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+            border: 2px solid #1e40af;
+        }
+
+        .piece.han {
+            background-color: #fee2e2;
+            color: #7f1d1d;
+            border: 2px solid #991b1b;
+        }
+
+        .cell.selected {
+            background-color: rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+        }
+
+        .cell.valid-move::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #10b981;
+            border-radius: 50%;
+            z-index: 3;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .footer-note { margin-top: 15px; font-size: 0.8rem; color: #a1a1aa; text-align: center; }
     </style>
 </head>
@@ -102,16 +182,13 @@
 
     <div class="status" id="statusText">초(작가님)의 차례입니다.</div>
 
-    <div class="board-wrapper">
-        <canvas id="janggiBoard" width="420" height="460"></canvas>
-    </div>
+    <div class="board" id="boardUI"></div>
 
     <div class="footer-note">격물치지의 마음으로 한 수 한 수 정성을 다합니다.</div>
 </div>
 
 <script>
-    const canvas = document.getElementById('janggiBoard');
-    const ctx = canvas.getContext('2d');
+    const boardUI = document.getElementById('boardUI');
     const statusText = document.getElementById('statusText');
     const restartBtn = document.getElementById('restartBtn');
     const difficultySelect = document.getElementById('difficulty');
@@ -119,8 +196,6 @@
 
     const COLS = 9;
     const ROWS = 10;
-    const CELL_W = canvas.width / COLS;
-    const CELL_H = canvas.height / ROWS;
 
     let board = [];
     let turn = 1; // 1: 초(플레이어), 2: 한(AI)
@@ -170,102 +245,53 @@
         gameOver = false;
         isAITurn = false;
         statusText.textContent = "초(작가님)의 차례입니다.";
-        drawBoard();
+        renderBoard();
     }
 
-    function drawBoard() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        ctx.strokeStyle = '#785a28';
-        ctx.lineWidth = 1.5;
-
-        for (let r = 0; r < ROWS; r++) {
-            ctx.beginPath();
-            ctx.moveTo(CELL_W * 0.5, CELL_H * (r + 0.5));
-            ctx.lineTo(CELL_W * (COLS - 0.5), CELL_H * (r + 0.5));
-            ctx.stroke();
-        }
-        for (let c = 0; c < COLS; c++) {
-            ctx.beginPath();
-            ctx.moveTo(CELL_W * (c + 0.5), CELL_H * 0.5);
-            ctx.lineTo(CELL_W * (c + 0.5), CELL_H * (ROWS - 0.5));
-            ctx.stroke();
-        }
-
-        drawPalace(3, 0, 5, 2);
-        drawPalace(3, 7, 5, 9);
-
-        if (selectedPiece) {
-            ctx.fillStyle = 'rgba(59, 130, 246, 0.3)';
-            ctx.beginPath();
-            ctx.arc(CELL_W * (selectedPiece.c + 0.5), CELL_H * (selectedPiece.r + 0.5), CELL_W * 0.42, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = 'rgba(16, 185, 129, 0.6)';
-            for (let m of validMoves) {
-                ctx.beginPath();
-                ctx.arc(CELL_W * (m.c + 0.5), CELL_H * (m.r + 0.5), CELL_W * 0.2, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+    function renderBoard() {
+        boardUI.innerHTML = '';
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.r = r;
+                cell.dataset.c = c;
+
+                if (selectedPiece && selectedPiece.r === r && selectedPiece.c === c) {
+                    cell.classList.add('selected');
+                }
+
+                if (validMoves.some(m => m.r === r && m.c === c)) {
+                    cell.classList.add('valid-move');
+                }
+
                 let p = board[r][c];
-                if (p) drawPiece(c, r, p);
+                if (p) {
+                    const pieceDiv = document.createElement('div');
+                    pieceDiv.className = `piece ${p.owner === 1 ? 'cho' : 'han'}`;
+                    
+                    let label = '';
+                    if (p.type === 'car') label = '車';
+                    else if (p.type === 'elephant') label = '象';
+                    else if (p.type === 'horse') label = '馬';
+                    else if (p.type === 'guard') label = '士';
+                    else if (p.type === 'general') label = p.owner === 1 ? '초' : '한';
+                    else if (p.type === 'cannon') label = '包';
+                    else if (p.type === 'soldier') label = p.owner === 1 ? '卒' : '兵';
+
+                    pieceDiv.textContent = label;
+                    cell.appendChild(pieceDiv);
+                }
+
+                cell.addEventListener('click', () => handleCellClick(r, c));
+                boardUI.appendChild(cell);
             }
         }
     }
 
-    function drawPalace(sc, sr, ec, er) {
-        ctx.beginPath();
-        ctx.moveTo(CELL_W * (sc + 0.5), CELL_H * (sr + 0.5));
-        ctx.lineTo(CELL_W * (ec + 0.5), CELL_H * (er + 0.5));
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(CELL_W * (ec + 0.5), CELL_H * (sr + 0.5));
-        ctx.lineTo(CELL_W * (sc + 0.5), CELL_H * (er + 0.5));
-        ctx.stroke();
-    }
-
-    function drawPiece(c, r, p) {
-        const cx = CELL_W * (c + 0.5);
-        const cy = CELL_H * (r + 0.5);
-        const radius = CELL_W * 0.42;
-
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.owner === 1 ? '#dbeafe' : '#fee2e2';
-        ctx.fill();
-        ctx.strokeStyle = p.owner === 1 ? '#1e40af' : '#991b1b';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.fillStyle = p.owner === 1 ? '#1e3a8a' : '#7f1d1d';
-        ctx.font = 'bold 15px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        let label = '';
-        if (p.type === 'car') label = '車';
-        else if (p.type === 'elephant') label = '象';
-        else if (p.type === 'horse') label = '馬';
-        else if (p.type === 'guard') label = '士';
-        else if (p.type === 'general') label = p.owner === 1 ? '초' : '한';
-        else if (p.type === 'cannon') label = '包';
-        else if (p.type === 'soldier') label = p.owner === 1 ? '卒' : '병';
-
-        ctx.fillText(label, cx, cy);
-    }
-
-    canvas.addEventListener('click', (e) => {
+    function handleCellClick(r, c) {
         if (gameOver || isAITurn || turn !== 1) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const c = Math.floor((e.clientX - rect.left) / CELL_W);
-        const r = Math.floor((e.clientY - rect.top) / CELL_H);
-
-        if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return;
 
         if (selectedPiece) {
             let targetMove = validMoves.find(m => m.r === r && m.c === c);
@@ -293,8 +319,8 @@
                 validMoves = getValidMoves(r, c);
             }
         }
-        drawBoard();
-    });
+        renderBoard();
+    }
 
     function executeMove(fr, fc, tr, tc) {
         let target = board[tr][tc];
@@ -487,7 +513,7 @@
             executeMove(selectedMove.from.r, selectedMove.from.c, selectedMove.to.r, selectedMove.to.c);
         }
         isAITurn = false;
-        drawBoard();
+        renderBoard();
     }
 
     restartBtn.addEventListener('click', initBoard);
