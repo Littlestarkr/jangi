@@ -6,42 +6,308 @@
 <title>한국 장기 게임</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    background: #f3eadb;
-    color: #30251c;
-    font-family: "Malgun Gothic", "Noto Sans KR", sans-serif;
+body{
+    margin:0;
+    background:#f2e7d5;
+    font-family:"Malgun Gothic","Noto Sans KR",sans-serif;
+    color:#33261b;
 }
 
-.container {
-    max-width: 1050px;
-    margin: auto;
-    padding: 20px;
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
 }
 
-h1 {
-    text-align: center;
-    margin: 5px 0;
+h1{
+    text-align:center;
+    margin:0 0 5px;
 }
 
-.subtitle {
-    text-align: center;
-    color: #766452;
-    margin-bottom: 18px;
+.subtitle{
+    text-align:center;
+    color:#766452;
+    margin-bottom:15px;
 }
 
-.controls {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
+.controls{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:15px;
 }
 
-button {
-    padding: 9px 16px;
-    border: 1
+button{
+    border:1px solid #987b5c;
+    background:#fffaf0;
+    border-radius:8px;
+    padding:9px 16px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+button.active{
+    background:#76513a;
+    color:white;
+}
+
+.game{
+    display:grid;
+    grid-template-columns:minmax(450px,700px) 250px;
+    gap:20px;
+    justify-content:center;
+}
+
+.board-wrap{
+    background:#a96f3d;
+    padding:12px;
+    border-radius:12px;
+}
+
+.board{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    grid-template-rows:repeat(10,1fr);
+    aspect-ratio:9/10;
+    background:#d6aa70;
+    border:3px solid #634123;
+}
+
+/* 각각의 교차점 */
+.cell{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+}
+
+/* 가로 세로 선 */
+.cell::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:#634123;
+}
+
+.cell::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:0;
+    right:0;
+    height:1px;
+    background:#634123;
+}
+
+/* 바깥쪽 선 정리 */
+.cell:nth-child(9n+1)::after{
+    left:50%;
+}
+
+.cell:nth-child(9n)::after{
+    right:50%;
+}
+
+.cell:nth-child(-n+9)::before{
+    top:50%;
+}
+
+.cell:nth-last-child(-n+9)::before{
+    bottom:50%;
+}
+
+/* 궁성 */
+.palace-line{
+    position:absolute;
+    pointer-events:none;
+    z-index:1;
+}
+
+.palace-top{
+    left:33.333%;
+    top:0;
+    width:33.333%;
+    height:30%;
+    border:1px solid #634123;
+    background:
+        linear-gradient(
+            45deg,
+            transparent 49%,
+            #634123 49%,
+            #634123 51%,
+            transparent 51%
+        ),
+        linear-gradient(
+            -45deg,
+            transparent 49%,
+            #634123 49%,
+            #634123 51%,
+            transparent 51%
+        );
+}
+
+.palace-bottom{
+    left:33.333%;
+    bottom:0;
+    width:33.333%;
+    height:30%;
+    border:1px solid #634123;
+    background:
+        linear-gradient(
+            45deg,
+            transparent 49%,
+            #634123 49%,
+            #634123 51%,
+            transparent 51%
+        ),
+        linear-gradient(
+            -45deg,
+            transparent 49%,
+            #634123 49%,
+            #634123 51%,
+            transparent 51%
+        );
+}
+
+/* 기물 */
+.piece{
+    width:82%;
+    height:82%;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:clamp(17px,3vw,30px);
+    font-weight:bold;
+    background:#f7e6c2;
+    box-shadow:0 2px 5px #0005;
+    position:relative;
+    z-index:5;
+    user-select:none;
+}
+
+.piece.blue{
+    color:#164f87;
+    border:2px solid #164f87;
+}
+
+.piece.red{
+    color:#a52d28;
+    border:2px solid #a52d28;
+}
+
+.cell.selected{
+    background:#ffe27a;
+}
+
+.cell.can-move{
+    background:#d7ed9e;
+}
+
+.cell.can-move::before,
+.cell.can-move::after{
+    background:#765b32;
+}
+
+.status{
+    text-align:center;
+    font-weight:bold;
+    font-size:18px;
+    margin-top:12px;
+}
+
+.side{
+    background:#fffaf1;
+    border:1px solid #d3c0a3;
+    border-radius:10px;
+    padding:15px;
+}
+
+.log{
+    height:220px;
+    overflow:auto;
+    background:#f3eadb;
+    padding:10px;
+    border-radius:7px;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.help{
+    margin-top:15px;
+    background:#eee0ca;
+    padding:10px;
+    border-radius:7px;
+    font-size:13px;
+    line-height:1.6;
+}
+
+@media(max-width:800px){
+
+    .game{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        padding:8px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>한국 장기</h1>
+
+<div class="subtitle">
+컴퓨터와 대국
+</div>
+
+<div class="controls">
+
+<button data-level="beginner" class="active">
+초보
+</button>
+
+<button data-level="intermediate">
+중급
+</button>
+
+<button data-level="expert">
+전문가
+</button>
+
+<button id="newGame">
+새 게임
+</button>
+
+</div>
+
+
+<div class="game">
+
+<div>
+
+<div class="board-wrap">
+
+<div id="board" class="board">
+
+<div class="palace-line palace-top"></div>
+<div class="palace-line palace-bottom"></div>
+
+</div>
+
+</div>
