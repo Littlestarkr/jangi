@@ -40,3 +40,1137 @@
       --panel: #1c2029;
       --panel-border: #2c3140;
       --text: #eef1f6;
+      --text-dim: #9aa2b1;
+      --accent: #5b8cff;
+      --accent-text: #0c1220;
+      --board-bg: #7a5a34;
+      --board-line: #2a1b0e;
+      --board-line-soft: #4a3520;
+      --han-fill: #3a5cc9;
+      --han-stroke: #16234f;
+      --cho-fill: #d8443a;
+      --cho-stroke: #6e1410;
+      --piece-text: #fff8ea;
+      --btn-bg: #262b37;
+      --btn-bg-hover: #323847;
+      --accent-soft: #24304d;
+      --lastmove-color: #ffb020;
+      --shadow: 0 6px 24px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #14171f;
+    --panel: #1c2029;
+    --panel-border: #2c3140;
+    --text: #eef1f6;
+    --text-dim: #9aa2b1;
+    --accent: #5b8cff;
+    --accent-text: #0c1220;
+    --board-bg: #7a5a34;
+    --board-line: #2a1b0e;
+    --board-line-soft: #4a3520;
+    --han-fill: #3a5cc9;
+    --han-stroke: #16234f;
+    --cho-fill: #d8443a;
+    --cho-stroke: #6e1410;
+    --piece-text: #fff8ea;
+    --btn-bg: #262b37;
+    --btn-bg-hover: #323847;
+    --accent-soft: #24304d;
+    --lastmove-color: #ffb020;
+    --shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  html, body{
+    height:100%;
+    margin:0;
+  }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    display:flex;
+    justify-content:center;
+    min-height:100%;
+  }
+  #app{
+    width:100%;
+    max-width: 560px;
+    padding: 16px 14px calc(16px + env(safe-area-inset-bottom,0px));
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  h1{
+    font-size: 1.25rem;
+    margin: 4px 0 0 0;
+    text-align:center;
+    letter-spacing: -0.02em;
+  }
+  .sub{
+    text-align:center;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    margin: -6px 0 4px 0;
+  }
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+  .diffGrid{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top: 8px;
+  }
+  .diffBtn{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--panel-border);
+    background: var(--btn-bg);
+    color: var(--text);
+    font-size: 1rem;
+    font-weight:600;
+    cursor:pointer;
+    text-align:left;
+  }
+  .diffBtn:hover{ background: var(--btn-bg-hover); }
+  .diffBtn .desc{
+    font-weight:400;
+    font-size:0.82rem;
+    color: var(--text-dim);
+    display:block;
+    margin-top:2px;
+  }
+  .diffBtn .tag{
+    flex-shrink:0;
+    font-size:1.4rem;
+  }
+  .formSection{
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--panel-border);
+  }
+  .formTitle{
+    font-weight:700;
+    font-size:0.95rem;
+  }
+  .formHint{
+    color: var(--text-dim);
+    font-size:0.8rem;
+    margin-top:2px;
+    margin-bottom:10px;
+  }
+  .formRow{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .formRow .formLabel{
+    width: 54px;
+    flex-shrink:0;
+    font-size:0.85rem;
+    color: var(--text-dim);
+    font-weight:600;
+  }
+  .formOpts{
+    display:flex;
+    gap:8px;
+    flex:1;
+  }
+  .formOptBtn{
+    flex:1;
+    padding: 9px 6px;
+    border-radius: 10px;
+    border: 1.5px solid var(--panel-border);
+    background: var(--btn-bg);
+    color: var(--text);
+    font-size:0.88rem;
+    font-weight:700;
+    letter-spacing: 0.05em;
+    cursor:pointer;
+  }
+  .formOptBtn.active{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  #statusBar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 10px 14px;
+    box-shadow: var(--shadow);
+    font-size: 0.92rem;
+  }
+  #statusBar .who{ font-weight:700; }
+  #statusBar .turnDot{
+    display:inline-block;
+    width:10px;height:10px;border-radius:50%;
+    margin-right:6px;
+    vertical-align:middle;
+  }
+  #statusBar .checkTag{
+    color: var(--check-glow);
+    font-weight:800;
+    margin-left:8px;
+  }
+  #boardWrap{
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 12px;
+    display:flex;
+    justify-content:center;
+  }
+  svg#board{
+    width:100%;
+    height:auto;
+    max-width: 480px;
+    touch-action: manipulation;
+  }
+  .controls{
+    display:flex;
+    gap:10px;
+  }
+  .ctrlBtn{
+    flex:1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--panel-border);
+    background: var(--btn-bg);
+    color: var(--text);
+    font-size:0.92rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .ctrlBtn:hover{ background: var(--btn-bg-hover); }
+  .hidden{ display:none !important; }
+  #overlay{
+    position: fixed;
+    inset:0;
+    background: rgba(10,12,18,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 20px;
+    z-index: 20;
+  }
+  #overCard{
+    background: var(--panel);
+    border-radius: 18px;
+    padding: 26px 22px;
+    max-width: 340px;
+    width:100%;
+    text-align:center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--panel-border);
+  }
+  #overCard h2{ margin: 0 0 6px 0; font-size:1.3rem; }
+  #overCard p{ color: var(--text-dim); margin: 0 0 18px 0; font-size:0.92rem; }
+  #thinkTag{
+    font-size:0.82rem;
+    color: var(--accent);
+    font-weight:700;
+    min-width: 70px;
+    text-align:right;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>장기 (Janggi)</h1>
+  <div class="sub">한 판의 승부, 궁을 지켜라</div>
+
+  <div id="setupScreen" class="panel">
+    <div class="formSection" style="border-top:none; padding-top:0;">
+      <div class="formTitle">내 진영 배치 (마상 / 상마)</div>
+      <div class="formHint">차 다음 칸에 마와 상을 어떤 순서로 놓을지 선택하세요. 상대 배치는 매 판 무작위로 정해집니다.</div>
+      <div class="formRow">
+        <span class="formLabel">왼쪽</span>
+        <div class="formOpts">
+          <button class="formOptBtn" data-side="left" data-val="ma-sang">마상</button>
+          <button class="formOptBtn" data-side="left" data-val="sang-ma">상마</button>
+        </div>
+      </div>
+      <div class="formRow" style="margin-bottom:0;">
+        <span class="formLabel">오른쪽</span>
+        <div class="formOpts">
+          <button class="formOptBtn" data-side="right" data-val="ma-sang">마상</button>
+          <button class="formOptBtn" data-side="right" data-val="sang-ma">상마</button>
+        </div>
+      </div>
+    </div>
+    <div class="formSection">
+      <div class="formTitle">난이도를 선택하세요</div>
+      <div class="formHint" style="margin-bottom:0;">플레이어는 초(楚, 붉은색 · 아래)를 잡고 먼저 둡니다.</div>
+    </div>
+    <div class="diffGrid">
+      <button class="diffBtn" data-level="beginner">
+        <span>
+          왕초보
+          <span class="desc">컴퓨터가 대부분 무작위로 둡니다. 규칙 익히기용</span>
+        </span>
+        <span class="tag">🌱</span>
+      </button>
+      <button class="diffBtn" data-level="intermediate">
+        <span>
+          중급
+          <span class="desc">몇 수 앞을 내다보고 둡니다. 적당한 긴장감</span>
+        </span>
+        <span class="tag">⚔️</span>
+      </button>
+      <button class="diffBtn" data-level="expert">
+        <span>
+          전문가
+          <span class="desc">가능한 깊이 읽어 최선의 수를 찾습니다</span>
+        </span>
+        <span class="tag">🧠</span>
+      </button>
+    </div>
+    <div id="resumeRow" class="hidden" style="margin-top:14px;">
+      <button id="resumeBtn" class="ctrlBtn" style="width:100%;">이어하기 (저장된 게임 있음)</button>
+    </div>
+  </div>
+
+  <div id="gameScreen" class="hidden">
+    <div id="statusBar">
+      <div><span class="turnDot" id="turnDot"></span><span class="who" id="turnText">초 차례</span><span id="checkTag" class="checkTag hidden">장군!</span></div>
+      <div id="thinkTag"></div>
+    </div>
+    <div id="boardWrap">
+      <svg id="board" viewBox="0 0 528 584" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="controls">
+      <button class="ctrlBtn" id="undoBtn">↩ 한 수 무르기</button>
+      <button class="ctrlBtn" id="restartBtn">🔄 새 게임</button>
+      <button class="ctrlBtn" id="menuBtn">☰ 난이도 변경</button>
+    </div>
+  </div>
+</div>
+
+<div id="overlay" class="hidden">
+  <div id="overCard">
+    <h2 id="overTitle">대국 종료</h2>
+    <p id="overDesc">결과 설명</p>
+    <button class="ctrlBtn" id="overRestart" style="width:100%; margin-bottom:8px;">다시 시작</button>
+    <button class="ctrlBtn" id="overMenu" style="width:100%;">난이도 변경</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- 오류 진단용: 스크립트 실행 중 문제가 생기면 화면에 표시 ---------- */
+function showFatalError(msg){
+  try{
+    let box = document.getElementById('fatalErrorBox');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'fatalErrorBox';
+      box.style.cssText = 'position:fixed;left:10px;right:10px;bottom:10px;z-index:999;background:#c0392b;color:#fff;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.4;box-shadow:0 4px 16px rgba(0,0,0,0.35);';
+      document.body.appendChild(box);
+    }
+    box.textContent = '오류가 발생했습니다: ' + msg + ' (새로고침 후에도 반복되면 알려주세요)';
+  }catch(e){ /* 표시조차 실패하면 조용히 무시 */ }
+}
+window.addEventListener('error', (ev)=>{
+  showFatalError(ev.message || '알 수 없는 오류');
+});
+window.addEventListener('unhandledrejection', (ev)=>{
+  showFatalError((ev.reason && ev.reason.message) || String(ev.reason));
+});
+
+/* ============================================================
+   1. 장기 엔진 (규칙 · 합법수 생성 · AI)
+   ============================================================ */
+const HAN = 'han'; // 위쪽, 컴퓨터
+const CHO = 'cho'; // 아래쪽, 플레이어
+
+function otherSide(s){ return s === HAN ? CHO : HAN; }
+function inBoard(r,c){ return r>=0 && r<=9 && c>=0 && c<=8; }
+function isPalace(r,c){ return ((r>=0 && r<=2) || (r>=7 && r<=9)) && c>=3 && c<=5; }
+function isOwnPalace(r,c,side){
+  if(side===HAN) return r>=0 && r<=2 && c>=3 && c<=5;
+  return r>=7 && r<=9 && c>=3 && c<=5;
+}
+
+const PALACE_DIAG_ADJ = {
+  '0,3': [[1,4]], '0,5': [[1,4]], '2,3': [[1,4]], '2,5': [[1,4]],
+  '1,4': [[0,3],[0,5],[2,3],[2,5]],
+  '7,3': [[8,4]], '7,5': [[8,4]], '9,3': [[8,4]], '9,5': [[8,4]],
+  '8,4': [[7,3],[7,5],[9,3],[9,5]]
+};
+const PALACE_DIAG_DIRS = {
+  '0,3': [[1,1]], '0,5': [[1,-1]], '2,3': [[-1,1]], '2,5': [[-1,-1]],
+  '1,4': [[-1,-1],[-1,1],[1,-1],[1,1]],
+  '7,3': [[1,1]], '7,5': [[1,-1]], '9,3': [[-1,1]], '9,5': [[-1,-1]],
+  '8,4': [[-1,-1],[-1,1],[1,-1],[1,1]]
+};
+function key(r,c){ return r+','+c; }
+
+function cloneBoard(board){
+  return board.map(row => row.map(cell => cell ? {type:cell.type, side:cell.side} : null));
+}
+
+function buildBackRow(formation){
+  // formation: {left:'ma-sang'|'sang-ma', right:'ma-sang'|'sang-ma'}
+  const back = new Array(9).fill(null);
+  back[0]='차'; back[8]='차';
+  back[3]='사'; back[5]='사';
+  if(formation.left==='ma-sang'){ back[1]='마'; back[2]='상'; } else { back[1]='상'; back[2]='마'; }
+  if(formation.right==='ma-sang'){ back[6]='마'; back[7]='상'; } else { back[6]='상'; back[7]='마'; }
+  return back;
+}
+
+function randomFormation(){
+  return {
+    left: Math.random()<0.5 ? 'ma-sang' : 'sang-ma',
+    right: Math.random()<0.5 ? 'ma-sang' : 'sang-ma'
+  };
+}
+
+function initialBoard(choFormation, hanFormation){
+  choFormation = choFormation || {left:'ma-sang', right:'sang-ma'};
+  hanFormation = hanFormation || {left:'ma-sang', right:'sang-ma'};
+  const b = [];
+  for(let r=0;r<10;r++) b.push(new Array(9).fill(null));
+  const hanBack = buildBackRow(hanFormation);
+  const choBack = buildBackRow(choFormation);
+  for(let c=0;c<9;c++){
+    if(hanBack[c]) b[0][c] = {type: hanBack[c], side: HAN};
+    if(choBack[c]) b[9][c] = {type: choBack[c], side: CHO};
+  }
+  b[1][4] = {type:'궁', side:HAN};
+  b[8][4] = {type:'궁', side:CHO};
+  b[2][1] = {type:'포', side:HAN};
+  b[2][7] = {type:'포', side:HAN};
+  b[7][1] = {type:'포', side:CHO};
+  b[7][7] = {type:'포', side:CHO};
+  for(const c of [0,2,4,6,8]){
+    b[3][c] = {type:'졸', side:HAN};
+    b[6][c] = {type:'병', side:CHO};
+  }
+  return b;
+}
+
+const ORTHO = [[-1,0],[1,0],[0,-1],[0,1]];
+
+function slideMoves(board,row,col,side,isCannon){
+  const moves = [];
+  let dirs = ORTHO.slice();
+  const sd = PALACE_DIAG_DIRS[key(row,col)];
+  if(sd) dirs = dirs.concat(sd);
+
+  for(const d of dirs){
+    const dr=d[0], dc=d[1];
+    const isDiag = dr!==0 && dc!==0;
+    let r=row+dr, c=col+dc;
+    let screenFound = false;
+    while(inBoard(r,c) && (!isDiag || isPalace(r,c))){
+      const p = board[r][c];
+      if(!isCannon){
+        if(!p){ moves.push([r,c]); }
+        else { if(p.side!==side) moves.push([r,c]); break; }
+      } else {
+        if(!screenFound){
+          if(p){
+            if(p.type==='포') break;
+            screenFound = true;
+          }
+        } else {
+          if(p){
+            if(p.side!==side && p.type!=='포') moves.push([r,c]);
+            break;
+          } else {
+            moves.push([r,c]);
+          }
+        }
+      }
+      r+=dr; c+=dc;
+    }
+  }
+  return moves;
+}
+
+const HORSE_MOVES = [
+  {leg:[-1,0], dest:[-2,-1]}, {leg:[-1,0], dest:[-2,1]},
+  {leg:[1,0],  dest:[2,-1]},  {leg:[1,0],  dest:[2,1]},
+  {leg:[0,-1], dest:[-1,-2]}, {leg:[0,-1], dest:[1,-2]},
+  {leg:[0,1],  dest:[-1,2]},  {leg:[0,1],  dest:[1,2]},
+];
+function horseMoves(board,row,col,side){
+  const moves = [];
+  for(const m of HORSE_MOVES){
+    const lr=row+m.leg[0], lc=col+m.leg[1];
+    if(!inBoard(lr,lc) || board[lr][lc]) continue;
+    const dr=row+m.dest[0], dc=col+m.dest[1];
+    if(!inBoard(dr,dc)) continue;
+    const p = board[dr][dc];
+    if(!p || p.side!==side) moves.push([dr,dc]);
+  }
+  return moves;
+}
+
+const ELEPHANT_MOVES = [
+  {legs:[[-1,0],[-2,-1]], dest:[-3,-2]},
+  {legs:[[-1,0],[-2,1]],  dest:[-3,2]},
+  {legs:[[1,0],[2,-1]],   dest:[3,-2]},
+  {legs:[[1,0],[2,1]],    dest:[3,2]},
+  {legs:[[0,-1],[-1,-2]], dest:[-2,-3]},
+  {legs:[[0,-1],[1,-2]],  dest:[2,-3]},
+  {legs:[[0,1],[-1,2]],   dest:[-2,3]},
+  {legs:[[0,1],[1,2]],    dest:[2,3]},
+];
+function elephantMoves(board,row,col,side){
+  const moves = [];
+  for(const m of ELEPHANT_MOVES){
+    let blocked = false;
+    for(const leg of m.legs){
+      const lr=row+leg[0], lc=col+leg[1];
+      if(!inBoard(lr,lc) || board[lr][lc]){ blocked = true; break; }
+    }
+    if(blocked) continue;
+    const dr=row+m.dest[0], dc=col+m.dest[1];
+    if(!inBoard(dr,dc)) continue;
+    const p = board[dr][dc];
+    if(!p || p.side!==side) moves.push([dr,dc]);
+  }
+  return moves;
+}
+
+function guardKingMoves(board,row,col,side){
+  const moves = [];
+  for(const d of ORTHO){
+    const r=row+d[0],c=col+d[1];
+    if(!isOwnPalace(r,c,side)) continue;
+    const p = board[r][c];
+    if(!p || p.side!==side) moves.push([r,c]);
+  }
+  const diag = PALACE_DIAG_ADJ[key(row,col)];
+  if(diag){
+    for(const dd of diag){
+      const r=dd[0],c=dd[1];
+      if(!isOwnPalace(r,c,side)) continue;
+      const p = board[r][c];
+      if(!p || p.side!==side) moves.push([r,c]);
+    }
+  }
+  return moves;
+}
+
+function soldierMoves(board,row,col,side){
+  const moves = [];
+  const fwd = side===HAN ? 1 : -1;
+  const cands = [[row+fwd,col],[row,col-1],[row,col+1]];
+  const diag = PALACE_DIAG_ADJ[key(row,col)];
+  if(diag) for(const d of diag) cands.push(d);
+  for(const cd of cands){
+    const r=cd[0],c=cd[1];
+    if(!inBoard(r,c)) continue;
+    const p = board[r][c];
+    if(!p || p.side!==side) moves.push([r,c]);
+  }
+  return moves;
+}
+
+function pieceMoves(board,row,col){
+  const piece = board[row][col];
+  if(!piece) return [];
+  const side = piece.side;
+  switch(piece.type){
+    case '차': return slideMoves(board,row,col,side,false);
+    case '포': return slideMoves(board,row,col,side,true);
+    case '마': return horseMoves(board,row,col,side);
+    case '상': return elephantMoves(board,row,col,side);
+    case '사': case '궁': return guardKingMoves(board,row,col,side);
+    case '졸': case '병': return soldierMoves(board,row,col,side);
+  }
+  return [];
+}
+
+function findKing(board,side){
+  for(let r=0;r<10;r++) for(let c=0;c<9;c++){
+    const p = board[r][c];
+    if(p && p.side===side && p.type==='궁') return [r,c];
+  }
+  return null;
+}
+
+function isSquareAttacked(board, row, col, bySide){
+  for(let r=0;r<10;r++) for(let c=0;c<9;c++){
+    const p = board[r][c];
+    if(p && p.side===bySide){
+      const moves = pieceMoves(board,r,c);
+      for(const m of moves) if(m[0]===row && m[1]===col) return true;
+    }
+  }
+  return false;
+}
+
+function kingsFacing(board){
+  const hk = findKing(board,HAN);
+  const ck = findKing(board,CHO);
+  if(!hk || !ck) return false;
+  if(hk[1] !== ck[1]) return false;
+  const col = hk[1];
+  const r1 = Math.min(hk[0],ck[0]), r2 = Math.max(hk[0],ck[0]);
+  for(let r=r1+1;r<r2;r++) if(board[r][col]) return false;
+  return true;
+}
+
+function applyMove(board, move){
+  const nb = cloneBoard(board);
+  nb[move.to[0]][move.to[1]] = nb[move.from[0]][move.from[1]];
+  nb[move.from[0]][move.from[1]] = null;
+  return nb;
+}
+
+function generateLegalMoves(board, side){
+  const legal = [];
+  for(let r=0;r<10;r++) for(let c=0;c<9;c++){
+    const p = board[r][c];
+    if(!p || p.side!==side) continue;
+    const dests = pieceMoves(board,r,c);
+    for(const d of dests){
+      const dr=d[0], dc=d[1];
+      const move = {from:[r,c], to:[dr,dc], piece:p.type, captured: board[dr][dc]};
+      const nb = applyMove(board, move);
+      const kingPos = p.type==='궁' ? [dr,dc] : findKing(nb, side);
+      if(!kingPos) continue;
+      if(isSquareAttacked(nb, kingPos[0], kingPos[1], otherSide(side))) continue;
+      if(kingsFacing(nb)) continue;
+      legal.push(move);
+    }
+  }
+  return legal;
+}
+
+function isInCheck(board, side){
+  const kp = findKing(board, side);
+  if(!kp) return false;
+  return isSquareAttacked(board, kp[0], kp[1], otherSide(side));
+}
+
+const VALUES = { '차':13, '포':7, '마':5, '상':3, '사':3, '졸':2, '병':2, '궁':0 };
+
+function evaluate(board, aiSide){
+  let score = 0;
+  for(let r=0;r<10;r++) for(let c=0;c<9;c++){
+    const p = board[r][c];
+    if(!p) continue;
+    const v = VALUES[p.type] || 0;
+    score += (p.side===aiSide ? v : -v);
+  }
+  return score;
+}
+
+function orderMoves(legal){
+  return legal.slice().sort((a,b) => {
+    const av = a.captured ? (VALUES[a.captured.type]||0) : -1;
+    const bv = b.captured ? (VALUES[b.captured.type]||0) : -1;
+    return bv - av;
+  });
+}
+
+function minimax(board, depth, alpha, beta, side, aiSide){
+  const legal0 = generateLegalMoves(board, side);
+  if(legal0.length === 0){
+    const sign = (side===aiSide) ? -1 : 1;
+    return sign * (100000 + depth);
+  }
+  if(depth === 0) return evaluate(board, aiSide);
+  const legal = orderMoves(legal0);
+  const opp = otherSide(side);
+  if(side === aiSide){
+    let best = -Infinity;
+    for(const m of legal){
+      const nb = applyMove(board, m);
+      const val = minimax(nb, depth-1, alpha, beta, opp, aiSide);
+      if(val > best) best = val;
+      if(best > alpha) alpha = best;
+      if(alpha >= beta) break;
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for(const m of legal){
+      const nb = applyMove(board, m);
+      const val = minimax(nb, depth-1, alpha, beta, opp, aiSide);
+      if(val < best) best = val;
+      if(best < beta) beta = best;
+      if(alpha >= beta) break;
+    }
+    return best;
+  }
+}
+
+function chooseAIMove(board, aiSide, depth){
+  const legal = orderMoves(generateLegalMoves(board, aiSide));
+  if(legal.length === 0) return null;
+  const opp = otherSide(aiSide);
+  let best = -Infinity;
+  let bestMoves = [];
+  for(const m of legal){
+    const nb = applyMove(board, m);
+    const val = minimax(nb, depth, -Infinity, Infinity, opp, aiSide);
+    if(val > best){ best = val; bestMoves = [m]; }
+    else if(val === best){ bestMoves.push(m); }
+  }
+  return bestMoves[Math.floor(Math.random()*bestMoves.length)];
+}
+
+function chooseAIMoveAdaptive(board, aiSide, maxDepth, budgetMs){
+  let t0 = Date.now();
+  let best = chooseAIMove(board, aiSide, 0);
+  let prevDuration = Date.now() - t0;
+  let cumulative = prevDuration;
+  let d = 0;
+  while(d < maxDepth){
+    const projectedNext = prevDuration * 6;
+    if(cumulative + projectedNext > budgetMs) break;
+    const t1 = Date.now();
+    const mv = chooseAIMove(board, aiSide, d+1);
+    const dur = Date.now() - t1;
+    cumulative += dur;
+    best = mv;
+    prevDuration = dur;
+    d++;
+    if(cumulative > budgetMs) break;
+  }
+  return best;
+}
+
+function chooseBeginnerMove(board, aiSide){
+  const legal = generateLegalMoves(board, aiSide);
+  if(legal.length === 0) return null;
+  const captures = legal.filter(m => m.captured);
+  if(captures.length > 0 && Math.random() < 0.35){
+    captures.sort((a,b)=> (VALUES[b.captured.type]||0) - (VALUES[a.captured.type]||0));
+    const topVal = VALUES[captures[0].captured.type]||0;
+    const top = captures.filter(m => (VALUES[m.captured.type]||0) === topVal);
+    return top[Math.floor(Math.random()*top.length)];
+  }
+  return legal[Math.floor(Math.random()*legal.length)];
+}
+
+/* ============================================================
+   2. 게임 상태 / UI
+   ============================================================ */
+const PLAYER = CHO;
+const AI = HAN;
+const STORAGE_KEY = 'janggi_save_v1';
+
+let playerFormation = { left: 'ma-sang', right: 'sang-ma' }; // 설정 화면에서 선택
+
+let state = {
+  board: null,
+  turn: CHO,
+  level: 'intermediate',
+  selected: null,
+  legalForSelected: [],
+  history: [],
+  lastMove: null,
+  over: false
+};
+
+function newGame(level){
+  const aiFormation = randomFormation(); // 상대 배치는 매 판 무작위
+  state.board = initialBoard(playerFormation, aiFormation);
+  state.turn = CHO;
+  state.level = level;
+  state.selected = null;
+  state.legalForSelected = [];
+  state.history = [];
+  state.lastMove = null;
+  state.over = false;
+  saveGame();
+  showGameScreen();
+  render();
+}
+
+function saveGame(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      board: state.board, turn: state.turn, level: state.level, over: state.over, lastMove: state.lastMove
+    }));
+  }catch(e){ /* 저장 실패 시 조용히 무시 */ }
+}
+function loadSavedGame(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){ return null; }
+}
+function clearSaved(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+}
+
+/* ---------- 화면 전환 ---------- */
+const setupScreen = document.getElementById('setupScreen');
+const gameScreen = document.getElementById('gameScreen');
+const resumeRow = document.getElementById('resumeRow');
+const resumeBtn = document.getElementById('resumeBtn');
+
+function showSetupScreen(){
+  gameScreen.classList.add('hidden');
+  setupScreen.classList.remove('hidden');
+  const saved = loadSavedGame();
+  if(saved && !saved.over){
+    resumeRow.classList.remove('hidden');
+  } else {
+    resumeRow.classList.add('hidden');
+  }
+}
+function showGameScreen(){
+  setupScreen.classList.add('hidden');
+  gameScreen.classList.remove('hidden');
+}
+
+function updateFormationButtons(){
+  document.querySelectorAll('.formOptBtn').forEach(btn=>{
+    const side = btn.dataset.side;
+    const active = playerFormation[side] === btn.dataset.val;
+    btn.classList.toggle('active', active);
+  });
+}
+updateFormationButtons();
+
+// 이벤트 위임: 설정 화면 전체에 클릭 리스너 하나만 달아서
+// 개별 버튼 바인딩 누락/타이밍 문제에 더 강하게 대응
+setupScreen.addEventListener('click', (ev)=>{
+  const formBtn = ev.target.closest('.formOptBtn');
+  if(formBtn){
+    playerFormation[formBtn.dataset.side] = formBtn.dataset.val;
+    updateFormationButtons();
+    return;
+  }
+  const diffBtn = ev.target.closest('.diffBtn');
+  if(diffBtn){
+    newGame(diffBtn.dataset.level);
+    return;
+  }
+  if(ev.target.closest('#resumeBtn')){
+    const saved = loadSavedGame();
+    if(!saved) return;
+    state.board = saved.board;
+    state.turn = saved.turn;
+    state.level = saved.level;
+    state.selected = null;
+    state.legalForSelected = [];
+    state.history = [];
+    state.lastMove = saved.lastMove || null;
+    state.over = false;
+    showGameScreen();
+    render();
+  }
+});
+
+document.getElementById('menuBtn').addEventListener('click', ()=>{
+  showSetupScreen();
+});
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+  newGame(state.level);
+});
+document.getElementById('undoBtn').addEventListener('click', ()=>{
+  undoMove();
+});
+
+/* ---------- 보드 렌더링 (SVG) ---------- */
+const svg = document.getElementById('board');
+const MARGIN = 40, CELL = 56;
+const W = MARGIN*2 + 8*CELL, H = MARGIN*2 + 9*CELL;
+svg.setAttribute('viewBox', '0 0 '+W+' '+H);
+
+function px(col){ return MARGIN + col*CELL; }
+function py(row){ return MARGIN + row*CELL; }
+
+function svgEl(tag, attrs){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for(const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+function buildStaticBoard(){
+  svg.innerHTML = '';
+  const bg = svgEl('rect', {x:0,y:0,width:W,height:H,rx:14,fill:'var(--board-bg)'});
+  svg.appendChild(bg);
+
+  const gridG = svgEl('g', {stroke:'var(--board-line)', 'stroke-width':2, 'stroke-linecap':'round'});
+  for(let r=0;r<10;r++){
+    gridG.appendChild(svgEl('line', {x1:px(0),y1:py(r),x2:px(8),y2:py(r)}));
+  }
+  for(let c=0;c<9;c++){
+    gridG.appendChild(svgEl('line', {x1:px(c),y1:py(0),x2:px(c),y2:py(9)}));
+  }
+  svg.appendChild(gridG);
+
+  const diagG = svgEl('g', {stroke:'var(--board-line-soft)', 'stroke-width':1.6});
+  function diag(r1,c1,r2,c2){
+    diagG.appendChild(svgEl('line', {x1:px(c1),y1:py(r1),x2:px(c2),y2:py(r2)}));
+  }
+  diag(0,3,2,5); diag(0,5,2,3);
+  diag(7,3,9,5); diag(7,5,9,3);
+  svg.appendChild(diagG);
+
+  // 외곽 테두리 강조
+  svg.appendChild(svgEl('rect', {x:px(0),y:py(0),width:px(8)-px(0),height:py(9)-py(0),fill:'none',stroke:'var(--board-line)','stroke-width':3, rx:2}));
+
+  // 클릭용 투명 히트 영역 + 좌표 저장
+  const hitG = svgEl('g', {id:'hitLayer'});
+  for(let r=0;r<10;r++){
+    for(let c=0;c<9;c++){
+      const hit = svgEl('circle', {cx:px(c),cy:py(r),r: CELL*0.46, fill:'transparent', 'data-r':r, 'data-c':c, style:'cursor:pointer;'});
+      hit.addEventListener('click', ()=> onCellClick(r,c));
+      hitG.appendChild(hit);
+    }
+  }
+  svg.appendChild(hitG);
+
+  svg.appendChild(svgEl('g', {id:'lastMoveLayer'}));
+  svg.appendChild(svgEl('g', {id:'moveLayer'}));
+  svg.appendChild(svgEl('g', {id:'pieceLayer'}));
+}
+
+function renderLastMove(){
+  const layer = document.getElementById('lastMoveLayer');
+  layer.innerHTML = '';
+  if(!state.lastMove) return;
+  const {from, to} = state.lastMove;
+  const sq = (r,c,opacity) => svgEl('rect', {
+    x: px(c)-CELL*0.46, y: py(r)-CELL*0.46, width: CELL*0.92, height: CELL*0.92,
+    rx: 8, fill:'var(--lastmove-color)', opacity: opacity, style:'pointer-events:none;'
+  });
+  layer.appendChild(sq(from[0], from[1], 0.28));
+  layer.appendChild(sq(to[0], to[1], 0.42));
+}
+
+const PIECE_LABEL = { '차':'차','포':'포','마':'마','상':'상','사':'사','궁':'궁','졸':'졸','병':'병' };
+
+function renderPieces(){
+  const layer = document.getElementById('pieceLayer');
+  layer.innerHTML = '';
+  const board = state.board;
+  for(let r=0;r<10;r++){
+    for(let c=0;c<9;c++){
+      const p = board[r][c];
+      if(!p) continue;
+      const g = svgEl('g', {style:'pointer-events:none;'});
+      const isSel = state.selected && state.selected[0]===r && state.selected[1]===c;
+      const fill = p.side===HAN ? 'var(--han-fill)' : 'var(--cho-fill)';
+      const stroke = p.side===HAN ? 'var(--han-stroke)' : 'var(--cho-stroke)';
+      const circle = svgEl('circle', {
+        cx:px(c), cy:py(r), r: CELL*0.40,
+        fill: fill, stroke: isSel ? 'var(--sel-ring)' : stroke,
+        'stroke-width': isSel ? 4 : 2.5
+      });
+      g.appendChild(circle);
+      const text = svgEl('text', {
+        x:px(c), y:py(r)+1, 'text-anchor':'middle', 'dominant-baseline':'central',
+        fill:'var(--piece-text)', 'font-size': CELL*0.36, 'font-weight':'800',
+        'font-family':'inherit'
+      });
+      text.textContent = PIECE_LABEL[p.type];
+      g.appendChild(text);
+      layer.appendChild(g);
+    }
+  }
+}
+
+function renderMoveHints(){
+  const layer = document.getElementById('moveLayer');
+  layer.innerHTML = '';
+  if(!state.selected) return;
+  for(const m of state.legalForSelected){
+    const r=m.to[0], c=m.to[1];
+    const isCapture = !!m.captured;
+    if(isCapture){
+      layer.appendChild(svgEl('circle', {cx:px(c),cy:py(r), r:CELL*0.44, fill:'none', stroke:'var(--capture-ring)', 'stroke-width':3.5, style:'pointer-events:none;'}));
+    } else {
+      layer.appendChild(svgEl('circle', {cx:px(c),cy:py(r), r:CELL*0.15, fill:'var(--move-dot)', opacity:'0.75', style:'pointer-events:none;'}));
+    }
+  }
+}
+
+function render(){
+  buildStaticBoard();
+  renderLastMove();
+  renderPieces();
+  renderMoveHints();
+  renderStatus();
+}
+
+/* ---------- 상태 표시 ---------- */
+const turnText = document.getElementById('turnText');
+const turnDot = document.getElementById('turnDot');
+const checkTag = document.getElementById('checkTag');
+const thinkTag = document.getElementById('thinkTag');
+
+function renderStatus(){
+  const levelLabel = state.level==='beginner' ? '왕초보' : state.level==='intermediate' ? '중급' : '전문가';
+  if(state.turn === PLAYER){
+    turnText.textContent = '내 차례 (초) · ' + levelLabel;
+    turnDot.style.background = 'var(--cho-fill)';
+  } else {
+    turnText.textContent = '상대 차례 (한) · ' + levelLabel;
+    turnDot.style.background = 'var(--han-fill)';
+  }
+  const inCheck = isInCheck(state.board, state.turn);
+  checkTag.classList.toggle('hidden', !inCheck);
+}
+
+/* ---------- 상호작용 ---------- */
+function onCellClick(r,c){
+  if(state.over) return;
+  if(state.turn !== PLAYER) return; // AI 차례엔 입력 무시
+
+  const board = state.board;
+  const clickedPiece = board[r][c];
+
+  // 이미 선택된 말이 있고, 클릭한 칸이 합법수 목적지인 경우 -> 이동
+  if(state.selected){
+    const mv = state.legalForSelected.find(m => m.to[0]===r && m.to[1]===c);
+    if(mv){
+      doMove(mv);
+      return;
+    }
+  }
+
+  // 자신의 말을 클릭 -> 선택 갱신
+  if(clickedPiece && clickedPiece.side === PLAYER){
+    state.selected = [r,c];
+    state.legalForSelected = generateLegalMoves(board, PLAYER).filter(m => m.from[0]===r && m.from[1]===c);
+    renderPieces();
+    renderMoveHints();
+    return;
+  }
+
+  // 그 외 클릭 -> 선택 해제
+  state.selected = null;
+  state.legalForSelected = [];
+  renderPieces();
+  renderMoveHints();
+}
+
+function doMove(move){
+  state.history.push({board: cloneBoard(state.board), turn: state.turn, lastMove: state.lastMove});
+  state.board = applyMove(state.board, move);
+  state.selected = null;
+  state.legalForSelected = [];
+  state.turn = otherSide(state.turn);
+  state.lastMove = {from: move.from, to: move.to};
+  saveGame();
+  render();
+
+  checkGameOverAndProceed();
+}
+
+function undoMove(){
+  if(state.over) return;
+  // 플레이어 차례로 되돌리기 위해 두 수(내 수 + 상대 수) 되돌림
+  let popped = 0;
+  let h = null;
+  while(state.history.length > 0 && popped < 2){
+    h = state.history.pop();
+    state.board = h.board;
+    state.turn = h.turn;
+    state.lastMove = h.lastMove;
+    popped++;
+    if(state.turn === PLAYER) break;
+  }
+  state.selected = null;
+  state.legalForSelected = [];
+  state.over = false;
+  saveGame();
+  render();
+}
+
+function checkGameOverAndProceed(){
+  const legal = generateLegalMoves(state.board, state.turn);
+  if(legal.length === 0){
+    endGame(otherSide(state.turn));
+    return;
+  }
+  if(state.turn === AI){
+    thinkTag.textContent = '생각 중...';
+    setTimeout(runAIMove, 260);
+  } else {
+    thinkTag.textContent = '';
+  }
+}
+
+function runAIMove(){
+  if(state.over) return;
+  const board = state.board;
+  let mv;
+  if(state.level === 'beginner'){
+    mv = chooseBeginnerMove(board, AI);
+  } else if(state.level === 'intermediate'){
+    mv = chooseAIMove(board, AI, 1);
+  } else {
+    mv = chooseAIMoveAdaptive(board, AI, 3, 1600);
+  }
+  thinkTag.textContent = '';
+  if(!mv){
+    endGame(PLAYER);
+    return;
+  }
+  state.history.push({board: cloneBoard(state.board), turn: state.turn, lastMove: state.lastMove});
+  state.board = applyMove(state.board, mv);
+  state.turn = otherSide(state.turn);
+  state.lastMove = {from: mv.from, to: mv.to};
+  saveGame();
+  render();
+
+  const legal = generateLegalMoves(state.board, state.turn);
+  if(legal.length === 0){
+    endGame(AI);
+  }
+}
+
+/* ---------- 종료 처리 ---------- */
+const overlay = document.getElementById('overlay');
+const overTitle = document.getElementById('overTitle');
+const overDesc = document.getElementById('overDesc');
+
+function endGame(winnerSide){
+  state.over = true;
+  saveGame();
+  const winnerIsPlayer = winnerSide === PLAYER;
+  overTitle.textContent = winnerIsPlayer ? '승리했습니다! 🎉' : '패배했습니다';
+  overDesc.textContent = winnerIsPlayer
+    ? '상대의 궁을 완전히 압박해 더 이상 움직일 수 없게 만들었습니다.'
+    : '내 궁이 움직일 곳이 없어졌습니다. 다시 도전해보세요.';
+  overlay.classList.remove('hidden');
+}
+document.getElementById('overRestart').addEventListener('click', ()=>{
+  overlay.classList.add('hidden');
+  newGame(state.level);
+});
+document.getElementById('overMenu').addEventListener('click', ()=>{
+  overlay.classList.add('hidden');
+  clearSaved();
+  showSetupScreen();
+});
+
+/* ---------- 초기화 ---------- */
+showSetupScreen();
+
+})();
+</script>
+</body>
+</html>
