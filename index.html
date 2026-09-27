@@ -907,6 +907,16 @@ function svgEl(tag, attrs){
 
 function buildStaticBoard(){
   svg.innerHTML = '';
+
+  const defs = svgEl('defs', {});
+  const marker = svgEl('marker', {
+    id:'lastMoveArrowHead', viewBox:'0 0 10 10', refX:'8', refY:'5',
+    markerWidth:'7', markerHeight:'7', orient:'auto-start-reverse'
+  });
+  marker.appendChild(svgEl('path', {d:'M0,0 L10,5 L0,10 Z', fill:'var(--lastmove-color)'}));
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
   const bg = svgEl('rect', {x:0,y:0,width:W,height:H,rx:14,fill:'var(--board-bg)'});
   svg.appendChild(bg);
 
@@ -951,12 +961,42 @@ function renderLastMove(){
   layer.innerHTML = '';
   if(!state.lastMove) return;
   const {from, to} = state.lastMove;
-  const sq = (r,c,opacity) => svgEl('rect', {
-    x: px(c)-CELL*0.46, y: py(r)-CELL*0.46, width: CELL*0.92, height: CELL*0.92,
-    rx: 8, fill:'var(--lastmove-color)', opacity: opacity, style:'pointer-events:none;'
+
+  const sqOutline = (r,c,strokeWidth,dash) => svgEl('rect', {
+    x: px(c)-CELL*0.47, y: py(r)-CELL*0.47, width: CELL*0.94, height: CELL*0.94,
+    rx: 9, fill:'none', stroke:'var(--lastmove-color)', 'stroke-width': strokeWidth,
+    'stroke-dasharray': dash || 'none', style:'pointer-events:none;'
   });
-  layer.appendChild(sq(from[0], from[1], 0.28));
-  layer.appendChild(sq(to[0], to[1], 0.42));
+
+  // 출발 칸: 옅은 점선 테두리
+  layer.appendChild(sqOutline(from[0], from[1], 3, '6 5'));
+  // 도착 칸: 굵은 실선 테두리 (더 눈에 띄게)
+  layer.appendChild(sqOutline(to[0], to[1], 5, null));
+
+  // 출발 -> 도착 을 잇는 화살표 (두 칸이 다를 때만)
+  if(from[0] !== to[0] || from[1] !== to[1]){
+    const x1 = px(from[1]), y1 = py(from[0]);
+    const x2 = px(to[1]), y2 = py(to[0]);
+    const dx = x2-x1, dy = y2-y1;
+    const dist = Math.hypot(dx,dy) || 1;
+    const ux = dx/dist, uy = dy/dist;
+    // 화살표가 말 원(반지름 약 CELL*0.4) 밖에서 시작/끝나도록 약간 줄임
+    const startPad = CELL*0.34, endPad = CELL*0.52;
+    const ax1 = x1 + ux*startPad, ay1 = y1 + uy*startPad;
+    const ax2 = x2 - ux*endPad, ay2 = y2 - uy*endPad;
+    layer.appendChild(svgEl('line', {
+      x1:ax1, y1:ay1, x2:ax2, y2:ay2,
+      stroke:'var(--lastmove-color)', 'stroke-width':4.5, 'stroke-linecap':'round',
+      'marker-end':'url(#lastMoveArrowHead)', opacity:'0.95', style:'pointer-events:none;'
+    }));
+  }
+
+  // 도착 칸 뒤에 은은한 발광 효과를 주어 시선을 붙잡음
+  const glow = svgEl('circle', {
+    cx: px(to[1]), cy: py(to[0]), r: CELL*0.5,
+    fill:'var(--lastmove-color)', opacity:'0.16', style:'pointer-events:none;'
+  });
+  layer.insertBefore(glow, layer.firstChild);
 }
 
 const PIECE_LABEL = { '차':'차','포':'포','마':'마','상':'상','사':'사','궁':'궁','졸':'졸','병':'병' };
